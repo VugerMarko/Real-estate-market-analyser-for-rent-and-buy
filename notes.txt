@@ -1,0 +1,16 @@
+==============================
+MAIN GOALS OF THIS PROJECT IS:
+==============================
+
+----> Scrape property listings
+----> Extract price, area, location, bedrooms, etc.
+----> Calculate price per m2
+----> Vizualize prices by neighborhood
+
+
+================================
+SECONDARY GOALS OF THIS PROJECT:
+================================
+
+----> Make an evaluation of best possible estate based on user input
+----> Make the script filter out best estates based on work commute
