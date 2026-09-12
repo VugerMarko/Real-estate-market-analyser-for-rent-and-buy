@@ -13,6 +13,7 @@ def nameFormat(name):
     name = name.replace("č", "c")
     name = name.replace("ć", "c")
     name = name.replace("ž", "z")
+    name = name.replace("-", "")
     
     name = name.replace(" ", "-")
     
