@@ -34,28 +34,28 @@ with sync_playwright() as p:
 
 soup = BeautifulSoup(html_code, "html.parser")
 
-kvartovi = []
-kvartovi = soup.select("li.CategoryListing-topCategoryItem")
+streets = []
+streets = soup.select("li.CategoryListing-topCategoryItem")
 
-podaci = []
+data = []
 
-for kvart in kvartovi:
-    naziv = kvart.select_one(
+for street in streets:
+    name = street.select_one(
         "a.CategoryListing-topCategoryLink"
     ).get_text(strip=True)
 
-    broj = kvart.select_one(
+    num_of_apartments = street.select_one(
         "span.CategoryListing-entitiesCount"
     ).get_text(strip=True)
 
-    print(naziv, broj)
+    print(name, num_of_apartments)
 
-    podaci.append((naziv, broj))
+    data.append((name, num_of_apartments))
 
 
 with open("kvartovi.csv", "w", newline="") as file:
     writer = csv.writer(file)
 
     writer.writerow(["Kvart", "Broj Stanova"])
-    writer.writerows(podaci)
+    writer.writerows(data)
 
