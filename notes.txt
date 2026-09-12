@@ -14,3 +14,4 @@ SECONDARY GOALS OF THIS PROJECT:
 
 ----> Make an evaluation of best possible estate based on user input
 ----> Make the script filter out best estates based on work commute
+----> Visualize the data gathered in form of financial interest
