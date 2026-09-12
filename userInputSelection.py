@@ -9,6 +9,15 @@ url_incomplete = "https://www.njuskalo.hr/iznajmljivanje-stanova/"
 def nameFormat(name):
     name = name.lower()
 
+    count = 0
+        
+    for letter in name:
+        #print(letter)
+        if letter == " ":
+            count+=1
+            
+            
+    #name = name.replace(" ", "")
     name = name.replace("š", "s")
     name = name.replace("č", "c")
     name = name.replace("ć", "c")
@@ -17,7 +26,7 @@ def nameFormat(name):
     
     name = name.replace(" ", "-")
     
-    return name
+    return name, count
 
 def userInput():
     user_Input = input("Unesi kvart: ")
