@@ -6,6 +6,8 @@ from bs4 import BeautifulSoup
 
 url_incomplete = "https://www.njuskalo.hr/iznajmljivanje-stanova/"
 
+new_format = ""
+
 def nameFormat(name):
     name = name.lower()
 
@@ -28,6 +30,10 @@ def nameFormat(name):
     
     return name
 
+def formatter(str):
+    new_format = str
+    return new_format
+
 def userInput():
     user_Input = input("Unesi kvart: ")
     
@@ -48,10 +54,9 @@ def userInput():
     
     formatted = nameFormat(user_Input)
     
-    print(formatted)
-    
     finished = adjacentLink(url_incomplete, formatted)
-    print(finished)
+   
+    formatter(formatted)
     
     return finished
     
@@ -60,4 +65,19 @@ def adjacentLink(url, name):
     completed_url = url + name
     
     return completed_url
+
+def create_csv(data_list):
+    filename = f"{new_format}.csv"
     
+    with open(filename, "w", newline="", encoding="utf-8") as file:
+        writer = csv.writer(file)
+        
+        writer.writerow([
+            "Ime oglasa",
+            "Opis",
+            "Datum oglašenja",
+            "Najam",
+            "Link oglasa"
+        ])
+        
+        writer.writerows(data_list)

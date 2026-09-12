@@ -1,0 +1,4 @@
+sve kaj bih mogao dodati:
+
+-napravi da iz lokacije uzme samo pod kvart kvarta i stavi kao novi stupac u csv fileu
+-
