@@ -8,6 +8,7 @@ import numpy as np
 import sqlite3
 import matplotlib
 
+from userInputSelection import userInput
 
 #unique libraries 
 from playwright.sync_api import sync_playwright
@@ -28,7 +29,7 @@ with sync_playwright() as p:
     page.goto(url)
     html_code = page.content()
 
-    print("CategoryListing-topCategoryLink" in html_code)
+    #print("CategoryListing-topCategoryLink" in html_code)
 
     browser.close()
 
@@ -48,7 +49,7 @@ for street in streets:
         "span.CategoryListing-entitiesCount"
     ).get_text(strip=True)
 
-    print(name, num_of_apartments)
+    #print(name, num_of_apartments)
 
     data.append((name, num_of_apartments))
 
@@ -59,3 +60,4 @@ with open("kvartovi.csv", "w", newline="") as file:
     writer.writerow(["Kvart", "Broj Stanova"])
     writer.writerows(data)
 
+userInput()
