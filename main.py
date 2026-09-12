@@ -60,4 +60,12 @@ with open("kvartovi.csv", "w", newline="") as file:
     writer.writerow(["Kvart", "Broj Stanova"])
     writer.writerows(data)
 
-userInput()
+output = userInput()
+
+
+with sync_playwright() as p:
+    browser = p.chromium.launch(headless=False)
+    
+    page = browser.new_page()
+    page.goto(output)
+    html_code = page.content()

@@ -22,14 +22,16 @@ def nameFormat(name):
     name = name.replace("č", "c")
     name = name.replace("ć", "c")
     name = name.replace("ž", "z")
-    name = name.replace("-", "")
+    name = name.replace("-", " ")
     
-    name = name.replace(" ", "-")
+    name = "-".join(name.split())
     
-    return name, count
+    return name
 
 def userInput():
     user_Input = input("Unesi kvart: ")
+    
+    found = False
     
     with open("kvartovi.csv", "r", encoding="utf-8") as file:
         reader = csv.DictReader(file)
@@ -38,10 +40,24 @@ def userInput():
             if row["Kvart"] == user_Input:
                 print("Found: ", row["Kvart"])
                 print("Num of apartments: ", row["Broj Stanova"])
-            else:
-                print("Name not found")
+                found = True
                 break
-                
+        
+        if not found:
+            print("Name not found")
     
-    print(nameFormat(user_Input))
+    formatted = nameFormat(user_Input)
+    
+    print(formatted)
+    
+    finished = adjacentLink(url_incomplete, formatted)
+    print(finished)
+    
+    return finished
+    
+def adjacentLink(url, name):
+    
+    completed_url = url + name
+    
+    return completed_url
     
