@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 
 url_incomplete = "https://www.njuskalo.hr/iznajmljivanje-stanova/"
 
-new_format = ""
+
 
 def nameFormat(name):
     name = name.lower()
@@ -30,9 +30,7 @@ def nameFormat(name):
     
     return name
 
-def formatter(str):
-    new_format = str
-    return new_format
+
 
 def userInput():
     user_Input = input("Unesi kvart: ")
@@ -56,7 +54,6 @@ def userInput():
     
     finished = adjacentLink(url_incomplete, formatted)
    
-    formatter(formatted)
     
     return finished
     
@@ -66,7 +63,9 @@ def adjacentLink(url, name):
     
     return completed_url
 
-def create_csv(data_list):
+def create_csv(data_list, new_format):
+    new_format = input("Imenuj svoju datoteku: ")
+    
     filename = f"{new_format}.csv"
     
     with open(filename, "w", newline="", encoding="utf-8") as file:
@@ -81,3 +80,34 @@ def create_csv(data_list):
         ])
         
         writer.writerows(data_list)
+        
+    print("Nova datoteka", filename, "je spremljena!")
+    
+    
+def create_db(data_list, new_format):
+    new_format = input("Imenuj svoju bazu podataka: ")
+    filename = f"{new_format}.db"
+    
+    connection = sqlite3.connect(filename)
+    
+    cursor = connection.cursor()
+    
+    cursor.execute("""
+            CREATE TABLE IF NOT EXISTS stanovi (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                ime_oglasa TEXT
+                opis TEXT
+                datum_objave TEXT
+                najam TEXT
+                link_na_oglas TEXT
+            )
+    """)
+    
+    cursor.executemany("""
+            INSERT INTO stanovi (ime_oglasa, opis, datum_objave, najam, link_na_oglas)
+            VALUES (?, ?, ?, ?, ?)
+        """, data_list)
+    
+    connection.commit()
+    connection.close()
+    

@@ -9,7 +9,7 @@ import sqlite3
 import matplotlib
 
 from userInputSelection import userInput
-from userInputSelection import create_csv
+from userInputSelection import create_csv, create_db
 
 #unique libraries 
 from playwright.sync_api import sync_playwright
@@ -113,7 +113,7 @@ with sync_playwright() as p:
         else:
             time = "N/A"
         
-        
+        #output
         print("Listing: ", i + 1)
         print(
             "Listing name: ", name, 
@@ -127,4 +127,8 @@ with sync_playwright() as p:
             
     browser.close()
 
-create_csv(entity_data)
+data_name = ""
+
+#create_csv(entity_data, data_name)
+
+create_db(entity_data, data_name)
