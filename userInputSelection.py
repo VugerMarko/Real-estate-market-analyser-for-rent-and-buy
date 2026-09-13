@@ -6,8 +6,6 @@ from bs4 import BeautifulSoup
 
 url_incomplete = "https://www.njuskalo.hr/iznajmljivanje-stanova/"
 
-
-
 def nameFormat(name):
     name = name.lower()
 
@@ -29,8 +27,6 @@ def nameFormat(name):
     name = "-".join(name.split())
     
     return name
-
-
 
 def userInput():
     user_Input = input("Unesi kvart: ")
@@ -62,26 +58,6 @@ def adjacentLink(url, name):
     
     return completed_url
 
-def create_csv(data_list, new_format):
-    new_format = input("Imenuj svoju datoteku: ")
-    
-    filename = f"{new_format}.csv"
-    
-    with open(filename, "w", newline="", encoding="utf-8") as file:
-        writer = csv.writer(file)
-        
-        writer.writerow([
-            "Ime oglasa",
-            "Opis",
-            "Datum oglašenja",
-            "Najam",
-            "Link oglasa"
-        ])
-        
-        writer.writerows(data_list)
-        
-    print("Nova datoteka", filename, "je spremljena!")
-
     
 def create_db(data_list):
     new_format = input("Imenuj svoju tablicu podataka: ")
@@ -95,22 +71,30 @@ def create_db(data_list):
         CREATE TABLE IF NOT EXISTS "{new_format}" (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             ime_oglasa TEXT,
-            opis TEXT,
+            tip_stana TEXT,
+            kat TEXT,
             datum_objave TEXT,
             najam TEXT,
-            link_na_oglas TEXT
+            kvadratura TEXT,
+            link_na_oglas TEXT,
+            kvart TEXT,
+            podkvart TEXT
         )
     """)
     
     cursor.executemany(f"""
             INSERT INTO "{new_format}" (
                 ime_oglasa, 
-                opis, 
+                tip_stana,
+                kat,
                 datum_objave, 
-                najam, 
-                link_na_oglas
+                najam,
+                kvadratura,
+                link_na_oglas,
+                kvart,
+                podkvart
             )
-            VALUES (?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, data_list)
     
     cursor.execute("""

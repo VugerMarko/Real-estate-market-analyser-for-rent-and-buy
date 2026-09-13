@@ -9,7 +9,7 @@ import sqlite3
 import matplotlib
 
 from userInputSelection import userInput
-from userInputSelection import create_csv, create_db
+from userInputSelection import create_db
 
 #unique libraries 
 from playwright.sync_api import sync_playwright
@@ -63,18 +63,17 @@ with sync_playwright() as p:
         
     j = 0    
         
+    
+        
     for page_num in range(1, 22):
         if page_num == 1:
             new_url = output
         else:
             new_url = f"{output}?=page{page_num}"
-        #print("Playwright:", page.locator("li.EntityList-item").count())
         page.goto(new_url)
         page.wait_for_selector("li.EntityList-item")
         
         entity_list = page.locator("li.EntityList-item:has(div.entity-description)")
-        
-        
         
         for i in range(entity_list.count()):
             entity = entity_list.nth(i)
@@ -109,7 +108,7 @@ with sync_playwright() as p:
             
             if info_locator.count() == 0:
                     continue
-
+            
             info = info_locator.inner_text()
             
             info_parts = [part.strip() for part in info.split("\n") if part.strip()]
@@ -122,20 +121,68 @@ with sync_playwright() as p:
             else:
                 time = "N/A"
             
+            #more info locator
+            kat = None
+            tip_stana = None
+            stan = None
+            
+            for part in info_parts:
+                if part.startswith("Stan u stambenoj zgradi,") or part.startswith("Stan u kući,"):
+                    stan = part
+                    break
+            
+            if stan:
+                tip_stana, kat = stan.split(",", 1)
+                tip_stana = tip_stana.strip()
+                kat = kat.strip()
+            else:
+                tip_stana = "N/A"
+                kat = "N/A"
+                
+            print("Tip stana: ", tip_stana)
+            print("Kat: ", kat)
             #street locator
-            lokacija = info_parts[2]
+            lokacija = None
             
-            lokacija = lokacija.replace("Lokacija:", "").strip()
+            for part in info_parts:
+                if part.startswith("Lokacija:"):
+                    lokacija = part
+                    break
             
-            kvart, podkvart = lokacija.split(",", 1)
-            
-            kvart = kvart.strip()
-            podkvart = podkvart.strip()
+            if lokacija:
+                lokacija = lokacija.replace("Lokacija:", "").strip()
+                
+                kvart, podkvart = lokacija.split(",", 1)
+                
+                kvart = kvart.strip()
+                podkvart = podkvart.strip()
+            else:
+                kvart = lokacija
+                podkvart = "N/A"
             
             print(
                 "Kvart: ", kvart,
                 "\npodkvart: ", podkvart
             )
+            
+            #livable space finder
+            
+            kvadratura = None
+            
+            for part in info_parts:
+                if part.startswith("Stambena površina:"):
+                    kvadratura = part
+                    break
+            
+            if kvadratura:
+                kvadratura = kvadratura.replace("Stambena površina:", "").strip()
+                
+                kvadratura = kvadratura.strip()
+            else:
+                kvadratura = "N/A"
+            
+            print("kvadratura: ", kvadratura)
+            
             
             #output
             print("Page: ", page_num)
@@ -150,17 +197,18 @@ with sync_playwright() as p:
             
             entity_data.append((
                 name, 
-                " | ".join(info_parts), 
-                time, 
-                price, 
-                link
+                tip_stana,
+                kat,
+                time,
+                price,
+                kvadratura,
+                link,
+                kvart,
+                podkvart
             ))
             
     browser.close()
 
 data_name = ""
 
-#data base creation
-
-#create_csv(entity_data, data_name)
 create_db(entity_data)
