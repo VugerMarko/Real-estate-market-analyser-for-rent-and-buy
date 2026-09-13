@@ -53,81 +53,114 @@ with sync_playwright() as p:
     output = userInput()
 
     print(output)
-    print(type(output))
 
     page.goto(url=output)
     html_code = page.content()
         
     input("Press enter to close the browser...")    
-    
-    entity_list = page.locator("li.EntityList-item")
-    #entity_list = soup.select("li.EntityList-item.EntityList-item--n1.EntityList-item--Regular")
-    
-    print("Playwright:", page.locator("li.EntityList-item").count())
-    
+
     entity_data = []
         
-    for i in range(entity_list.count()):
-        entity = entity_list.nth(i)
+    j = 0    
         
-        #name finder
-        name_locator = entity.locator("h3.entity-title a.link")
-        
-        if name_locator.count() > 0:
-            name = name_locator.inner_text()
+    for page_num in range(1, 22):
+        if page_num == 1:
+            new_url = output
         else:
-            name = "N/A"
+            new_url = f"{output}?=page{page_num}"
+        #print("Playwright:", page.locator("li.EntityList-item").count())
+        page.goto(new_url)
+        page.wait_for_selector("li.EntityList-item")
+        
+        entity_list = page.locator("li.EntityList-item:has(div.entity-description)")
+        
+        
+        
+        for i in range(entity_list.count()):
+            entity = entity_list.nth(i)
+            j = j + 1
+            #name finder
+            name_locator = entity.locator("h3.entity-title a.link")
             
-        #link finder
-        link_locator = entity.locator("h3.entity-title a.link")
-        
-        if link_locator.count() > 0:
-            link = link_locator.get_attribute("href")
-            link = "https://www.njuskalo.hr" + link if link else "N/A"
-        else:
-            link = "N/A"
-        
-        #price finder
-        price_locator = entity.locator("strong.price.price--hrk")
-        
-        if price_locator.count() > 0:
-            price = price_locator.inner_text()
-        else:
-            price = "N/A"
-        
-        #info finder
-        info_locator = entity.locator("div.entity-description")
-        
-        if info_locator.count() == 0:
-                continue
+            if name_locator.count() > 0:
+                name = name_locator.inner_text()
+            else:
+                name = "N/A"
+                
+            #link finder
+            link_locator = entity.locator("h3.entity-title a.link")
+            
+            if link_locator.count() > 0:
+                link = link_locator.get_attribute("href")
+                link = "https://www.njuskalo.hr" + link if link else "N/A"
+            else:
+                link = "N/A"
+            
+            #price finder
+            price_locator = entity.locator("strong.price.price--hrk")
+            
+            if price_locator.count() > 0:
+                price = price_locator.inner_text()
+            else:
+                price = "N/A"
+            
+            #info finder
+            info_locator = entity.locator("div.entity-description")
+            
+            if info_locator.count() == 0:
+                    continue
 
-        info = info_locator.inner_text()
-        
-        info_parts = [part.strip() for part in info.split("\n") if part.strip()]
+            info = info_locator.inner_text()
+            
+            info_parts = [part.strip() for part in info.split("\n") if part.strip()]
 
-        #release date finder
-        time_locator = entity.locator("time.date.date--full")
+            #release date finder
+            time_locator = entity.locator("time.date.date--full")
 
-        if time_locator.count() > 0:
-            time = time_locator.inner_text()
-        else:
-            time = "N/A"
-        
-        #output
-        print("Listing: ", i + 1)
-        print(
-            "Listing name: ", name, 
-            "\napartment info:", info_parts,
-            "\ndate of release:", time,
-            "\nmonthly rent: ", price,
-            "\nlisting link: ", link
-        )
-        
-        entity_data.append((name, info_parts, time, price, link))
+            if time_locator.count() > 0:
+                time = time_locator.inner_text()
+            else:
+                time = "N/A"
+            
+            #street locator
+            lokacija = info_parts[2]
+            
+            lokacija = lokacija.replace("Lokacija:", "").strip()
+            
+            kvart, podkvart = lokacija.split(",", 1)
+            
+            kvart = kvart.strip()
+            podkvart = podkvart.strip()
+            
+            print(
+                "Kvart: ", kvart,
+                "\npodkvart: ", podkvart
+            )
+            
+            #output
+            print("Page: ", page_num)
+            print("Listing: ", j)
+            print(
+                "Listing name: ", name, 
+                "\napartment info:", info_parts,
+                "\ndate of release:", time,
+                "\nmonthly rent: ", price,
+                "\nlisting link: ", link
+            )
+            
+            entity_data.append((
+                name, 
+                " | ".join(info_parts), 
+                time, 
+                price, 
+                link
+            ))
             
     browser.close()
 
 data_name = ""
 
-create_csv(entity_data, data_name)
-#create_db(entity_data, data_name)
+#data base creation
+
+#create_csv(entity_data, data_name)
+create_db(entity_data)

@@ -53,7 +53,6 @@ def userInput():
     formatted = nameFormat(user_Input)
     
     finished = adjacentLink(url_incomplete, formatted)
-   
     
     return finished
     
@@ -82,31 +81,45 @@ def create_csv(data_list, new_format):
         writer.writerows(data_list)
         
     print("Nova datoteka", filename, "je spremljena!")
+
     
-    
-def create_db(data_list, new_format):
-    new_format = input("Imenuj svoju bazu podataka: ")
-    filename = f"{new_format}.db"
+def create_db(data_list):
+    new_format = input("Imenuj svoju tablicu podataka: ")
+    filename = "stanoviDB.db"
     
     connection = sqlite3.connect(filename)
     
     cursor = connection.cursor()
     
-    cursor.execute("""
-            CREATE TABLE IF NOT EXISTS stanovi (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                ime_oglasa TEXT
-                opis TEXT
-                datum_objave TEXT
-                najam TEXT
-                link_na_oglas TEXT
-            )
+    cursor.execute(f"""
+        CREATE TABLE IF NOT EXISTS "{new_format}" (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            ime_oglasa TEXT,
+            opis TEXT,
+            datum_objave TEXT,
+            najam TEXT,
+            link_na_oglas TEXT
+        )
     """)
     
-    cursor.executemany("""
-            INSERT INTO stanovi (ime_oglasa, opis, datum_objave, najam, link_na_oglas)
+    cursor.executemany(f"""
+            INSERT INTO "{new_format}" (
+                ime_oglasa, 
+                opis, 
+                datum_objave, 
+                najam, 
+                link_na_oglas
+            )
             VALUES (?, ?, ?, ?, ?)
         """, data_list)
+    
+    cursor.execute("""
+        SELECT name
+        FROM sqlite_master
+        WHERE type='table';
+    """)
+    
+    print(cursor.fetchall())
     
     connection.commit()
     connection.close()
