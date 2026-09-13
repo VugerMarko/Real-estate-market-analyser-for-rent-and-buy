@@ -8,8 +8,10 @@ import numpy as np
 import sqlite3
 import matplotlib
 
+#custom libraries
 from userInputSelection import userInput
 from userInputSelection import create_db
+from estateDescriptionAnalyzer import openConnectionDb, delete_table
 
 #unique libraries 
 from playwright.sync_api import sync_playwright
@@ -39,8 +41,6 @@ with sync_playwright() as p:
             "span.CategoryListing-entitiesCount"
         ).get_text(strip=True)
 
-        #print(name, num_of_apartments)
-
         data.append((name, num_of_apartments))
 
 
@@ -61,23 +61,30 @@ with sync_playwright() as p:
 
     entity_data = []
         
-    j = 0    
-        
+    j = 0
     
-        
-    for page_num in range(1, 22):
+    seen_links = set()
+    
+    for page_num in range(1, 26):
         if page_num == 1:
             new_url = output
         else:
-            new_url = f"{output}?=page{page_num}"
+            new_url = f"{output}?page={page_num}"
         page.goto(new_url)
-        page.wait_for_selector("li.EntityList-item")
         
         entity_list = page.locator("li.EntityList-item:has(div.entity-description)")
         
-        for i in range(entity_list.count()):
+        listing_count = entity_list.count()
+        
+        if listing_count == 0:
+            print(f"No listings on page {page_num}. stopping...")
+            break
+        
+        real_listing = 0
+        
+        for i in range(listing_count):
             entity = entity_list.nth(i)
-            j = j + 1
+            
             #name finder
             name_locator = entity.locator("h3.entity-title a.link")
             
@@ -89,11 +96,22 @@ with sync_playwright() as p:
             #link finder
             link_locator = entity.locator("h3.entity-title a.link")
             
-            if link_locator.count() > 0:
-                link = link_locator.get_attribute("href")
-                link = "https://www.njuskalo.hr" + link if link else "N/A"
-            else:
-                link = "N/A"
+            if link_locator.count() == 0:
+                continue
+            
+            link = link_locator.get_attribute("href")
+            
+            if not link:
+                continue
+            
+            link = "https://www.njuskalo.hr" + link
+            
+            if link in seen_links:
+                continue
+            
+            seen_links.add(link)
+            
+            j += 1
             
             #price finder
             price_locator = entity.locator("strong.price.price--hrk")
@@ -101,7 +119,7 @@ with sync_playwright() as p:
             if price_locator.count() > 0:
                 price = price_locator.inner_text()
             else:
-                price = "N/A"
+                continue
             
             #info finder
             info_locator = entity.locator("div.entity-description")
@@ -119,7 +137,7 @@ with sync_playwright() as p:
             if time_locator.count() > 0:
                 time = time_locator.inner_text()
             else:
-                time = "N/A"
+                continue
             
             #more info locator
             kat = None
@@ -183,6 +201,7 @@ with sync_playwright() as p:
             
             print("kvadratura: ", kvadratura)
             
+            real_listing += 1
             
             #output
             print("Page: ", page_num)
@@ -206,7 +225,11 @@ with sync_playwright() as p:
                 kvart,
                 podkvart
             ))
-            
+        
+        if real_listing == 0:
+            print("No listings found. Stopping.")
+            break
+        
     browser.close()
 
 data_name = ""

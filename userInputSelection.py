@@ -3,7 +3,7 @@ import sqlite3
 import requests
 from bs4 import BeautifulSoup
 
-
+new_format = None
 url_incomplete = "https://www.njuskalo.hr/iznajmljivanje-stanova/"
 
 def nameFormat(name):
@@ -30,21 +30,6 @@ def nameFormat(name):
 
 def userInput():
     user_Input = input("Unesi kvart: ")
-    
-    found = False
-    
-    with open("kvartovi.csv", "r", encoding="utf-8") as file:
-        reader = csv.DictReader(file)
-        
-        for row in reader:
-            if row["Kvart"] == user_Input:
-                print("Found: ", row["Kvart"])
-                print("Num of apartments: ", row["Broj Stanova"])
-                found = True
-                break
-        
-        if not found:
-            print("Name not found")
     
     formatted = nameFormat(user_Input)
     
@@ -82,6 +67,8 @@ def create_db(data_list):
         )
     """)
     
+    cursor.execute(f"delete from {new_format}")
+    
     cursor.executemany(f"""
             INSERT INTO "{new_format}" (
                 ime_oglasa, 
@@ -96,14 +83,6 @@ def create_db(data_list):
             )
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, data_list)
-    
-    cursor.execute("""
-        SELECT name
-        FROM sqlite_master
-        WHERE type='table';
-    """)
-    
-    print(cursor.fetchall())
     
     connection.commit()
     connection.close()
