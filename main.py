@@ -129,6 +129,5 @@ with sync_playwright() as p:
 
 data_name = ""
 
-#create_csv(entity_data, data_name)
-
-create_db(entity_data, data_name)
+create_csv(entity_data, data_name)
+#create_db(entity_data, data_name)
