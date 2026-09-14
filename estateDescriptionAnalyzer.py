@@ -39,32 +39,29 @@ kv = 115
 
 filtered = df[df["kvadratura"] == kv]
 
-avg = filtered.groupby("kvart")["najam"].min().sort_values()
-wish = df[df["link_na_oglas"] == "https://www.njuskalo.hr/nekretnine/vrhovec-luksuzan-6s-stan-duplom-garazom-terasom-pogledom-grad-oglas-50461264"]
+#cijena po m2
+df["cijena_po_m2"] = df["najam"] / df["kvadratura"]
 
-print(wish)
 
-cursor.execute(f"""
-    select najam, kvadratura
-    from podatci
-""")
+#prosjek po odredjenoj kvadraturi
+avg = filtered.groupby("kvart")["najam"].mean().sort_values()
 
-rows = cursor.fetchall()
+#wish = df[df["link_na_oglas"] == "https://www.njuskalo.hr/nekretnine/vrhovec-luksuzan-6s-stan-duplom-garazom-terasom-pogledom-grad-oglas-50461264"]
+#print(wish)
 
-i = 0
-
-for row in rows:
-    i += 1
-
-print(i)
+#cijena po m2
+cijenapom = df.groupby("kvart")["cijena_po_m2"].mean().sort_values()
+print("\n=========== Cijena po m2 ===========")
+print(cijenapom)
+print("\n==== Prosjecna cijena po kvartu ====")
 print(avg)
 
-bars = plt.bar(avg.index, avg.values)
+bars = plt.bar(cijenapom.index, cijenapom.values)
 
-plt.bar_label(bars, fmt="%.0f€", padding=3)
+plt.bar_label(bars, fmt="%.2f€", padding=3)
 
-plt.title(f"Prosjecni najam stana od {kv} (m2) po kvartu")
-plt.ylabel("Prosjecni najam (€)")
+plt.title(f"Cijena po m2")
+plt.ylabel("Cijena (€)")
 plt.xlabel("Kvart")
 
 plt.xticks(rotation=45, ha="right")
