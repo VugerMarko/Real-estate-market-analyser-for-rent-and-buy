@@ -87,9 +87,9 @@ def create_db(data_list):
             ime_oglasa TEXT,
             tip_stana TEXT,
             kat TEXT,
-            datum_objave TEXT,
-            najam TEXT,
-            kvadratura TEXT,
+            datum_objave DATE,
+            najam INT,
+            kvadratura FLOAT,
             link_na_oglas TEXT,
             kvart TEXT,
             podkvart TEXT

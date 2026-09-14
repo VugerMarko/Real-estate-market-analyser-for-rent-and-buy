@@ -1,7 +1,7 @@
 import sqlite3
 from bs4 import BeautifulSoup
-import math
-import matplotlib
+import numpy as np
+import matplotlib.pyplot as plt
 import pandas as pd
 
 def delete_table():
@@ -24,6 +24,23 @@ def find_desired_rent_price(max_price):
 connection = sqlite3.connect("stanovviDB.db")
 cursor = connection.cursor()
 
+cursor.execute(f"""
+    select *
+    from podatci
+""")
+
+data_table = cursor.fetchall()
+
+columns = [description[0] for description in cursor.description]
+
+df = pd.DataFrame(data_table, columns=columns)
+
+kv = 35
+
+filtered_df = df[df["kvadratura"] == kv]
+
+avg = filtered_df.groupby("kvart")["najam"].mean().sort_values()
+
 
 cursor.execute(f"""
     select najam, kvadratura
@@ -35,10 +52,23 @@ rows = cursor.fetchall()
 i = 0
 
 for row in rows:
-    print(f"Kvadratura: {row[0]} | Najam: {row[1]}")
     i += 1
 
 print(i)
+print(avg)
+
+bars = plt.bar(avg.index, avg.values)
+
+plt.bar_label(bars, fmt="%.0f€", padding=3)
+
+plt.title(f"Prosjecni najam stana od {kv} (m2) po kvartu")
+plt.ylabel("Prosjecni najam (€)")
+plt.xlabel("Kvart")
+
+plt.xticks(rotation=45, ha="right")
+
+plt.tight_layout()
+plt.show()
 
 connection.close()
     

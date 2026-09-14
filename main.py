@@ -1,9 +1,7 @@
 #basic libraries
 from bs4 import BeautifulSoup
-import math
 import csv
-import pandas as pd
-import numpy as np
+from datetime import datetime
 
 #custom libraries
 from userInputSelection import *
@@ -111,6 +109,13 @@ with sync_playwright() as p:
                 
                 if price_locator.count() > 0:
                     price = price_locator.inner_text()
+                    
+                    price = (
+                        price.replace("€", "")
+                            .replace(".", "")
+                            .strip()
+                    )
+                    price = int(price)
                 else:
                     continue
                 
@@ -129,6 +134,7 @@ with sync_playwright() as p:
 
                 if time_locator.count() > 0:
                     time = time_locator.inner_text()
+                    time = datetime.strptime(time, "%d.%m.%Y.").date()
                 else:
                     continue
                 
@@ -192,8 +198,13 @@ with sync_playwright() as p:
                     kvadratura = kvadratura.replace("Stambena površina:", "").strip()
                     
                     kvadratura = kvadratura.strip()
+                    
+                    
+                    kvadratura = kvadratura.replace("m2", "")
+                        
+                    kvadratura = float(kvadratura)
                 else:
-                    kvadratura = "N/A"
+                    continue
                 
                 print("kvadratura: ", kvadratura)
                 
