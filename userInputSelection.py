@@ -28,10 +28,39 @@ def nameFormat(name):
     
     return name
 
+def nameFormatdb(name):
+    name = name.lower()
+
+    count = 0
+        
+    for letter in name:
+        #print(letter)
+        if letter == " ":
+            count+=1
+            
+            
+    #name = name.replace(" ", "")
+    name = name.replace("š", "s")
+    name = name.replace("č", "c")
+    name = name.replace("ć", "c")
+    name = name.replace("ž", "z")
+    name = name.replace("-", " ")
+    
+    name = "_".join(name.split())
+    
+    return name
+
 def userInput():
     user_Input = input("Unesi kvart: ")
     
     formatted = nameFormat(user_Input)
+    
+    finished = adjacentLink(url_incomplete, formatted)
+    
+    return finished
+
+def linkMaker(nameof):
+    formatted = nameFormat(nameof)
     
     finished = adjacentLink(url_incomplete, formatted)
     
@@ -46,7 +75,7 @@ def adjacentLink(url, name):
     
 def create_db(data_list):
     new_format = input("Imenuj svoju tablicu podataka: ")
-    filename = "stanoviDB.db"
+    filename = "stanovviDB.db"
     
     connection = sqlite3.connect(filename)
     

@@ -1,27 +1,9 @@
-import csv
 import sqlite3
-import requests
 from bs4 import BeautifulSoup
 import math
 import matplotlib
 import pandas as pd
 
-
-def openConnectionDb():
-    connection = sqlite3.connect("stanoviDB.db")
-    cursor = connection.cursor()
-
-    user_input_table = input("Unesi tablicu: ")
-
-    cursor.execute(f"select * from {user_input_table}")
-
-    data = cursor.fetchall()
-
-    for row in data:
-        print(row)
-        
-    connection.close()
-    
 def delete_table():
     userInput = input("enter the table you want to delete: ")
     
@@ -38,3 +20,25 @@ def delete_table():
 def find_desired_rent_price(max_price):
     #I will come back to this at a later dates
     return 0
+
+connection = sqlite3.connect("stanovviDB.db")
+cursor = connection.cursor()
+
+
+cursor.execute(f"""
+    select najam, kvadratura
+    from podatci
+""")
+
+rows = cursor.fetchall()
+
+i = 0
+
+for row in rows:
+    print(f"Kvadratura: {row[0]} | Najam: {row[1]}")
+    i += 1
+
+print(i)
+
+connection.close()
+    
