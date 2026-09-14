@@ -43,7 +43,7 @@ with sync_playwright() as p:
         writer.writerow(["Kvart", "Broj Stanova"])
         writer.writerows(data)
 
-    input("Press enter to close the browser...")    
+    #input("Press enter to close the browser...")    
 
     entity_data = []
     for kvart, broj_stanova in data:
@@ -56,16 +56,34 @@ with sync_playwright() as p:
         
         seen_links = set()
         
-        for page_num in range(1, 26):
+        for page_num in range(1, 50):
             if page_num == 1:
                 new_url = custom_link
             else:
                 new_url = f"{custom_link}?page={page_num}"
+            
+            print("\n=============================")
+            print("Page number: ", page_num)
+            print("Going to: ", new_url)
+            
             page.goto(new_url)
+            
+            page.wait_for_load_state("domcontentloaded")
+            
+            print("Actual URL: ", page.url)
             
             entity_list = page.locator("li.EntityList-item:has(div.entity-description)")
             
             listing_count = entity_list.count()
+            
+            try:
+                entity_list.first.wait_for(
+                    state="visible",
+                    timeout=10000
+                )
+            except:
+                print(f"No listings on page {page_num}. stopping...")
+                break
             
             if listing_count == 0:
                 print(f"No listings on page {page_num}. stopping...")
@@ -99,11 +117,6 @@ with sync_playwright() as p:
                 
                 if link in seen_links:
                     continue
-                
-                seen_links.add(link)
-                
-                j += 1
-                
                 #price finder
                 price_locator = entity.locator("strong.price.price--hrk")
                 
@@ -210,6 +223,9 @@ with sync_playwright() as p:
                 
                 real_listing += 1
                 
+                seen_links.add(link)
+                j += 1
+                
                 #output
                 print("Page: ", page_num)
                 print("Listing: ", j)
@@ -233,6 +249,8 @@ with sync_playwright() as p:
                     podkvart
                 ))
             
+            print("listing count: ", listing_count)
+            print("real listings: ", real_listing)
             if real_listing == 0:
                 print("No listings found. Stopping.")
                 break
