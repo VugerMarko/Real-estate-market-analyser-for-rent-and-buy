@@ -35,8 +35,11 @@ columns = [description[0] for description in cursor.description]
 
 df = pd.DataFrame(data_table, columns=columns)
 
-kv = 35
+kv = 115
 
+filtered = df[df["kvadratura"] == kv]
+
+avg = filtered.groupby("kvart")["najam"].min().sort_values()
 wish = df[df["link_na_oglas"] == "https://www.njuskalo.hr/nekretnine/vrhovec-luksuzan-6s-stan-duplom-garazom-terasom-pogledom-grad-oglas-50461264"]
 
 print(wish)
@@ -54,11 +57,11 @@ for row in rows:
     i += 1
 
 print(i)
-#print(avg)
+print(avg)
 
-#bars = plt.bar(avg.index, avg.values)
+bars = plt.bar(avg.index, avg.values)
 
-#plt.bar_label(bars, fmt="%.0f€", padding=3)
+plt.bar_label(bars, fmt="%.0f€", padding=3)
 
 plt.title(f"Prosjecni najam stana od {kv} (m2) po kvartu")
 plt.ylabel("Prosjecni najam (€)")
@@ -67,7 +70,7 @@ plt.xlabel("Kvart")
 plt.xticks(rotation=45, ha="right")
 
 plt.tight_layout()
-#plt.show()
+plt.show()
 
 connection.close()
     
