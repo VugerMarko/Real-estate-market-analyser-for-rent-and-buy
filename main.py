@@ -9,7 +9,7 @@ from userInputSelection import *
 #unique libraries 
 from playwright.sync_api import sync_playwright
 
-url = "https://www.njuskalo.hr/iznajmljivanje-stanova/zagreb"
+url = "https://www.njuskalo.hr/iznajmljivanje-stanova/primorsko-goranska"
 
 with sync_playwright() as p:
     browser = p.chromium.launch(headless=False)
@@ -70,6 +70,11 @@ with sync_playwright() as p:
             
             page.wait_for_load_state("domcontentloaded")
             
+            if "validate.perfdrive.com" in page.url:
+                print("Njuskalo requested verification.")
+                print("Stopping scraper.")
+                break
+            
             print("Actual URL: ", page.url)
             
             entity_list = page.locator("li.EntityList-item:has(div.entity-description)")
@@ -126,6 +131,7 @@ with sync_playwright() as p:
                     price = (
                         price.replace("€", "")
                             .replace(".", "")
+                            .replace(",", ".")
                             .strip()
                     )
                     price = int(price)
