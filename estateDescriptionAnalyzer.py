@@ -26,7 +26,7 @@ cursor = connection.cursor()
 
 cursor.execute(f"""
     select *
-    from podatci
+    from zagreb
 """)
 
 data_table = cursor.fetchall()
@@ -35,7 +35,7 @@ columns = [description[0] for description in cursor.description]
 
 df = pd.DataFrame(data_table, columns=columns)
 
-kv = 115
+kv = 35
 
 filtered = df[df["kvadratura"] == kv]
 
@@ -44,7 +44,7 @@ df["cijena_po_m2"] = df["najam"] / df["kvadratura"]
 
 
 #prosjek po odredjenoj kvadraturi
-avg = filtered.groupby("kvart")["najam"].mean().sort_values()
+avg = filtered.groupby("kvart")["najam"].min().sort_values()
 
 #wish = df[df["link_na_oglas"] == "https://www.njuskalo.hr/nekretnine/vrhovec-luksuzan-6s-stan-duplom-garazom-terasom-pogledom-grad-oglas-50461264"]
 #print(wish)
@@ -56,7 +56,7 @@ print(cijenapom)
 print("\n==== Prosjecna cijena po kvartu ====")
 print(avg)
 
-bars = plt.bar(cijenapom.index, cijenapom.values)
+bars = plt.bar(avg.index, avg.values)
 
 plt.bar_label(bars, fmt="%.2f€", padding=3)
 
