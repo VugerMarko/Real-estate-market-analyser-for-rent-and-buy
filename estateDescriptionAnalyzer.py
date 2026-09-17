@@ -22,13 +22,6 @@ cursor.execute(f"""
 data_table = cursor.fetchall()
 
 
-cursor.execute("""
-    select *
-    from updates
-""")
-
-update_data = cursor.fetchall()
-
 def save_update(dbname, tablename):
     connection = sqlite3.connect(dbname)
     cursor = connection.cursor()
