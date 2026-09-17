@@ -43,8 +43,8 @@ def save_update(dbname, tablename):
     
     print("update list updated.")
     
-    return 0
-
+    connection.close()
+    
 def delete_table():
     userInput = input("enter the table you want to delete: ")
     
@@ -97,6 +97,8 @@ plt.xticks(rotation=45, ha="right")
 
 plt.tight_layout()
 #plt.show()
+
+save_update("stanovviDB.db", "zagreb")
 
 connection.close()
     

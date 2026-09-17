@@ -137,16 +137,10 @@ with sync_playwright() as p:
                             .strip()
                     )
                     price = int(price)
-                elif price < 300 and price > 10000:
-                    price = price_locator.inner_text()
                     
-                    price = (
-                        price.replace("€", "")
-                            .replace(".", "")
-                            .replace(",", ".")
-                            .strip()
-                    )
-                    price = int(price)
+                    if price < 300 or price > 10000:
+                        continue
+                else:
                     continue
                 
                 #info finder
