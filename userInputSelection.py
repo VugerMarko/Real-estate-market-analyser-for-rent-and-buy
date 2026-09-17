@@ -116,3 +116,25 @@ def create_db(data_list):
     connection.commit()
     connection.close()
     
+def create_update_db(data_list):
+    connection = sqlite3.connect("update.db")
+    cursor = connection.cursor()
+    
+    cursor.execute("""
+        create table if not exists updates (
+            id integer primary key autoincrement,
+            date_of_update date,
+            median int
+        )
+    """)
+    
+    cursor.executemany("""
+        insert into updates (
+            date_of_update,
+            median
+        )
+        values (?, ?)
+    """, data_list)
+    
+    connection.commit()
+    connection.close()

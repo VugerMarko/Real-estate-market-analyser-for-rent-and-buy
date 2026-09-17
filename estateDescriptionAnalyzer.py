@@ -3,6 +3,47 @@ from bs4 import BeautifulSoup
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+from datetime import datetime
+
+from userInputSelection import create_update_db
+
+nameDb = "stanovviDB.db"
+
+update_list = []
+
+connection = sqlite3.connect(nameDb)
+cursor = connection.cursor()
+
+cursor.execute(f"""
+    select *
+    from zagreb
+""")
+
+data_table = cursor.fetchall()
+
+
+def save_update(dbname, tablename):
+    connection = sqlite3.connect(dbname)
+    cursor = connection.cursor()
+    
+    cursor.execute(f"""
+        select najam
+        from {tablename}
+    """)
+    
+    median = df["najam"].mean()
+    today = datetime.today()
+    
+    update_list.append((
+        today,
+        median
+    ))
+    
+    create_update_db(update_list)
+    
+    print("update list updated.")
+    
+    return 0
 
 def delete_table():
     userInput = input("enter the table you want to delete: ")
@@ -16,20 +57,6 @@ def delete_table():
     connection.close()
     
     print(f"the table called {userInput} has been deleted.")
-
-def find_desired_rent_price(max_price):
-    #I will come back to this at a later dates
-    return 0
-
-connection = sqlite3.connect("stanovviDB.db")
-cursor = connection.cursor()
-
-cursor.execute(f"""
-    select *
-    from zagreb
-""")
-
-data_table = cursor.fetchall()
 
 columns = [description[0] for description in cursor.description]
 
@@ -49,6 +76,8 @@ avg = filtered.groupby("kvart")["najam"].min().sort_values()
 #wish = df[df["link_na_oglas"] == "https://www.njuskalo.hr/nekretnine/vrhovec-luksuzan-6s-stan-duplom-garazom-terasom-pogledom-grad-oglas-50461264"]
 #print(wish)
 
+
+
 #cijena po m2
 cijenapom = df.groupby("kvart")["cijena_po_m2"].mean().sort_values()
 print("\n=========== Cijena po m2 ===========")
@@ -67,7 +96,7 @@ plt.xlabel("Kvart")
 plt.xticks(rotation=45, ha="right")
 
 plt.tight_layout()
-plt.show()
+#plt.show()
 
 connection.close()
     

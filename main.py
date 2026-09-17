@@ -5,11 +5,12 @@ from datetime import datetime
 
 #custom libraries
 from userInputSelection import *
+from estateDescriptionAnalyzer import save_update
 
 #unique libraries 
 from playwright.sync_api import sync_playwright
 
-url = "https://www.njuskalo.hr/iznajmljivanje-stanova/primorsko-goranska"
+url = "https://www.njuskalo.hr/iznajmljivanje-stanova/zagreb"
 
 with sync_playwright() as p:
     browser = p.chromium.launch(headless=False)
@@ -73,6 +74,7 @@ with sync_playwright() as p:
             if "validate.perfdrive.com" in page.url:
                 print("Njuskalo requested verification.")
                 print("Stopping scraper.")
+                print(page.url)
                 break
             
             print("Actual URL: ", page.url)
@@ -135,7 +137,16 @@ with sync_playwright() as p:
                             .strip()
                     )
                     price = int(price)
-                else:
+                elif price < 300 and price > 10000:
+                    price = price_locator.inner_text()
+                    
+                    price = (
+                        price.replace("€", "")
+                            .replace(".", "")
+                            .replace(",", ".")
+                            .strip()
+                    )
+                    price = int(price)
                     continue
                 
                 #info finder
@@ -266,3 +277,4 @@ with sync_playwright() as p:
 data_name = ""
 
 create_db(entity_data)
+save_update("stanovviDB.db", "zagreb")
