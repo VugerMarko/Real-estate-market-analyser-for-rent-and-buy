@@ -73,7 +73,7 @@ avg = filtered.groupby("kvart")["najam"].min().sort_values()
 #cijena po m2
 cijenapom = df.groupby("kvart")["cijena_po_m2"].mean().sort_values()
 
-save_update("stanovviDB.db", "zagreb")
+#save_update("stanovviDB.db", "zagreb")
 
 connection.close()
     

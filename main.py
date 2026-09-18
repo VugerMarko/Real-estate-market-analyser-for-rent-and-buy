@@ -43,9 +43,7 @@ with sync_playwright() as p:
 
         writer.writerow(["Kvart", "Broj Stanova"])
         writer.writerows(data)
-
-    #input("Press enter to close the browser...")    
-
+    
     entity_data = []
     for kvart, broj_stanova in data:
         dbname = nameFormatdb(kvart)
