@@ -70,10 +70,34 @@ filtered = df[df["kvadratura"] == kv]
 df["cijena_po_m2"] = df["najam"] / df["kvadratura"]
 #prosjek po odredjenoj kvadraturi
 avg = filtered.groupby("kvart")["najam"].min().sort_values()
+#prosjecna kvadratura po kvartu
+avg_kv = df.groupby("kvart")["kvadratura"].mean().sort_values()
 #cijena po m2
 cijenapom = df.groupby("kvart")["cijena_po_m2"].mean().sort_values()
+#minimalna cijena po kvartu
+min_cijena = df.groupby("kvart")["najam"].min().sort_values()
+#kolicina oglasa po kvartu
+kol = df["kvart"].value_counts()
+#prosjecna cijena po kvartu
+pros = df.groupby("kvart")["najam"].mean().sort_values()
 
 #save_update("stanovviDB.db", "zagreb")
 
+print("\n============= PODACI I ANALIZA PODATAKA ==============")
+
+print('\n=========== Prosjecna kvadratura po kvartu ===========')
+print(avg_kv)
+
+print('\n=============== Cijena po m2 po kvartu ===============')
+print(cijenapom)
+
+print('\n============= Minimalna cijena po kvartu =============')
+print(min_cijena)
+
+print('\n============= Prosjecna cijena po kvartu =============')
+print(pros)
+
+print('\n============= Kolicina oglasa po kvartu ==============')
+print(kol)
+
 connection.close()
-    
