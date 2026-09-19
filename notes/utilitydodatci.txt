@@ -5,3 +5,4 @@ sve kaj bih mogao dodati:
 -nadji konacni broj stranica sa dostupnim nekretninama
 -napravi da se cijelo trziste updatea da ne moram manualno pisat svaki kvart
 -napravi da se sada i automatski imenuju tablice ovisno o kojoj zupaniji se radi
+-napravi da se vidi razlika kada se najvise oduzima iz kojeg kvarta kolicina stanova

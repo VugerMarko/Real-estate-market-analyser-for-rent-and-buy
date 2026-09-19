@@ -41,7 +41,7 @@ def save_update(dbname, tablename):
         median
     ))
     
-    create_update_db(update_list)
+    create_update_db(update_list, "updates")
     
     print("update list updated.")
     
@@ -107,10 +107,12 @@ stats = df.groupby("kvart").agg(
     kvadratura_mean=("kvadratura", "mean"),
     kvadratura_median=("kvadratura", "median"),
     kvadratura_min=("kvadratura", "min"),
-    kvadratura_max=("kvadratura", "max")
+    kvadratura_max=("kvadratura", "max"),
+    
+    cijena_po_m2 = ("cijena_po_m2", "mean")
 )
 
-average = stats[["najam_mean", "kvadratura_mean"]].rename(
+average = stats[["najam_mean", "kvadratura_mean", "cijena_po_m2"]].rename(
     columns={
         "najam_mean": "najam",
         "kvadratura_mean": "kvadratura"
@@ -165,8 +167,12 @@ print(kol) """
 
 #graph
 
-fig, ax1 = plt.subplots(figsize=(12, 7))
-
+fig, (ax1, ax4) = plt.subplots(
+    2,
+    1,
+    figsize=(12, 9),
+    gridspec_kw={"height_ratios": [2, 1]}
+)
 
 bars = ax1.bar(
     average.index,
@@ -203,7 +209,7 @@ ax1.grid(
 
 ax1.text(
     1.08,
-    0.75,
+    0.65,
     text,
     transform=ax1.transAxes,
     verticalalignment="top",
@@ -214,7 +220,30 @@ ax1.text(
     )
 )
 
-plt.title("Najam i kvadratura po kvartu")
+
+# drugi graf
+bars2 = ax4.bar(
+    average.index,
+    average["cijena_po_m2"],
+)
+
+
+
+ax4.set_title("Prosječna cijena po m² po kvartu")
+ax4.set_ylabel("Cijena po m² (€)")
+ax4.tick_params(axis="x", rotation=90)
+
+ax4.grid(
+    axis="y",
+    linestyle="--",
+    alpha=0.3
+)
+
+ax4.set_axisbelow(True)
+
+ax4.bar_label(bars2, fmt="%.0f €", padding=3 )
+
+plt.title("Prosjecni najam i kvadrature po kvartu")
 plt.tight_layout()
 
 plt.subplots_adjust(right=0.75)

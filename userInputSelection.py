@@ -73,8 +73,7 @@ def adjacentLink(url, name):
     return completed_url
 
     
-def create_db(data_list):
-    new_format = input("Imenuj svoju tablicu podataka: ")
+def create_db(data_list, new_format):
     filename = "stanovviDB.db"
     
     connection = sqlite3.connect(filename)
@@ -116,20 +115,20 @@ def create_db(data_list):
     connection.commit()
     connection.close()
     
-def create_update_db(data_list):
+def create_update_db(data_list, userInput):
     connection = sqlite3.connect("update.db")
     cursor = connection.cursor()
     
-    cursor.execute("""
-        create table if not exists updates (
+    cursor.execute(f"""
+        create table if not exists {userInput} (
             id integer primary key autoincrement,
             date_of_update date,
             median int
         )
     """)
     
-    cursor.executemany("""
-        insert into updates (
+    cursor.executemany(f"""
+        insert into {userInput} (
             date_of_update,
             median
         )

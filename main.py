@@ -45,6 +45,8 @@ with sync_playwright() as p:
         writer.writerows(data)
     
     entity_data = []
+    hand_review_data = []
+    
     for kvart, broj_stanova in data:
         dbname = nameFormatdb(kvart)
         custom_link = linkMaker(kvart)
@@ -137,6 +139,7 @@ with sync_playwright() as p:
                     price = int(price)
                     
                     if price < 300 or price > 10000:
+                        suspicious_price = True
                         continue
                 else:
                     continue
@@ -246,8 +249,8 @@ with sync_playwright() as p:
                     "\nlisting link: ", link
                 )
                 
-                entity_data.append((
-                    name, 
+                listing_data = (
+                    name,
                     tip_stana,
                     kat,
                     time,
@@ -256,7 +259,12 @@ with sync_playwright() as p:
                     link,
                     kvart,
                     podkvart
-                ))
+                )
+                #need to work on this real time lwk
+                if suspicious_price:
+                    hand_review_data.append(listing_data)
+                else:
+                    entity_data.append(listing_data)
             
             print("listing count: ", listing_count)
             print("real listings: ", real_listing)
@@ -268,5 +276,6 @@ with sync_playwright() as p:
 
 data_name = ""
 
-create_db(entity_data)
+create_db(entity_data, "zagreb")
+create_db(hand_review_data, "hand_review")
 save_update("stanovviDB.db", "zagreb")
