@@ -78,32 +78,49 @@ filtered = df[
         ["najam", "kvadratura", "link_na_oglas", "kvart", "podkvart"]
     ]
 )
- """
+"""
 #cijena po m2
 df["cijena_po_m2"] = df["najam"] / df["kvadratura"]
 #prosjek po odredjenoj kvadraturi
 avg = filtered.groupby("kvart")["najam"].min().sort_values()
 
-average = df.groupby("kvart").agg(
+""" average = df.groupby("kvart").agg(
     najam = ("najam", "mean"),
     kvadratura = ("kvadratura", "mean")
+) """
+
+najam_median = df["najam"].median()
+najam_min = df["najam"].min()
+najam_max = df["najam"].max()
+
+kvadratura_median = df["kvadratura"].median()
+kvadratura_min = df["kvadratura"].min()
+kvadratura_max = df["kvadratura"].max()
+
+
+stats = df.groupby("kvart").agg(
+    najam_mean=("najam", "mean"),
+    najam_median=("najam", "median"),
+    najam_min=("najam", "min"),
+    najam_max=("najam", "max"),
+
+    kvadratura_mean=("kvadratura", "mean"),
+    kvadratura_median=("kvadratura", "median"),
+    kvadratura_min=("kvadratura", "min"),
+    kvadratura_max=("kvadratura", "max")
+)
+
+average = stats[["najam_mean", "kvadratura_mean"]].rename(
+    columns={
+        "najam_mean": "najam",
+        "kvadratura_mean": "kvadratura"
+    }
 )
 
 x = range(len(average))
 
 width = 0.4
 
-najam_median = average["najam"].median()
-najam_min = average["najam"].min()
-najam_max = average["najam"].max()
-
-print(najam_max, najam_min)
-
-kvadratura_median = average["kvadratura"].median()
-kvadratura_min = average["kvadratura"].min()
-kvadratura_max = average["kvadratura"].max()
-
-print(kvadratura_max, kvadratura_min)
 
 text = (
     f"Najam:\n"
