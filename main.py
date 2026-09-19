@@ -249,7 +249,7 @@ with sync_playwright() as p:
                     "\nlisting link: ", link
                 )
                 
-                listing_data = (
+                entity_data.append((
                     name,
                     tip_stana,
                     kat,
@@ -259,12 +259,7 @@ with sync_playwright() as p:
                     link,
                     kvart,
                     podkvart
-                )
-                #need to work on this real time lwk
-                if suspicious_price:
-                    hand_review_data.append(listing_data)
-                else:
-                    entity_data.append(listing_data)
+                ))
             
             print("listing count: ", listing_count)
             print("real listings: ", real_listing)
@@ -277,5 +272,5 @@ with sync_playwright() as p:
 data_name = ""
 
 create_db(entity_data, "zagreb")
-create_db(hand_review_data, "hand_review")
+#create_db(hand_review_data, "hand_review")
 save_update("stanovviDB.db", "zagreb")

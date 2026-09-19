@@ -64,21 +64,23 @@ columns = [description[0] for description in cursor.description]
 
 df = pd.DataFrame(data_table, columns=columns)
 
-selected_kvart = ["Donja Dubrava", "Maksimir", "Pešćenica - Žitnjak", "Donji Grad", "Gornji Grad - Medveščak"]
+pd.set_option("display.max_rows", None)
+
+selected_kvart = ["Podsljeme", "Novi Zagreb - Zapad", "Novi Zagreb - Istok"]
 
 filtered = df[
     (df["kvadratura"] >= 35) &
     (df["kvadratura"] <= 60) &
-    (df["najam"] <= 550) &
+    (df["najam"] <= 650) &
     (df["kvart"].isin(selected_kvart))
 ]
 
-""" print(
+print(
     filtered[
         ["najam", "kvadratura", "link_na_oglas", "kvart", "podkvart"]
     ]
 )
-"""
+
 #cijena po m2
 df["cijena_po_m2"] = df["najam"] / df["kvadratura"]
 #prosjek po odredjenoj kvadraturi
@@ -247,6 +249,6 @@ plt.title("Prosjecni najam i kvadrature po kvartu")
 plt.tight_layout()
 
 plt.subplots_adjust(right=0.75)
-plt.show()
+#plt.show()
 
 connection.close()
