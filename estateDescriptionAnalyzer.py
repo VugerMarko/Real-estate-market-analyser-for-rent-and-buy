@@ -23,11 +23,10 @@ cursor.execute(f"""
 
 data_table = cursor.fetchall()
 
-
 def save_update(dbname, tablename):
     connection = sqlite3.connect(dbname)
     cursor = connection.cursor()
-    
+        
     cursor.execute(f"""
         select najam
         from {tablename}
@@ -35,10 +34,13 @@ def save_update(dbname, tablename):
     
     median = df["najam"].mean()
     today = datetime.today()
+    num_of_listings = df["najam"].notna().sum()
+    
     
     update_list.append((
         today,
-        median
+        median,
+        num_of_listings
     ))
     
     create_update_db(update_list, "updates")
@@ -74,13 +76,13 @@ filtered = df[
     (df["najam"] <= 650) &
     (df["kvart"].isin(selected_kvart))
 ]
-
+""" 
 print(
     filtered[
         ["najam", "kvadratura", "link_na_oglas", "kvart", "podkvart"]
     ]
 )
-
+"""
 #cijena po m2
 df["cijena_po_m2"] = df["najam"] / df["kvadratura"]
 #prosjek po odredjenoj kvadraturi
@@ -250,5 +252,8 @@ plt.tight_layout()
 
 plt.subplots_adjust(right=0.75)
 #plt.show()
+
+save_update("stanovviDB.db", "zagreb")
+
 
 connection.close()

@@ -140,6 +140,7 @@ with sync_playwright() as p:
                     
                     if price < 300 or price > 10000:
                         suspicious_price = True
+                        #hand_review_data.append(price)
                         continue
                 else:
                     continue
@@ -249,7 +250,7 @@ with sync_playwright() as p:
                     "\nlisting link: ", link
                 )
                 
-                entity_data.append((
+                listing_data = (
                     name,
                     tip_stana,
                     kat,
@@ -259,7 +260,26 @@ with sync_playwright() as p:
                     link,
                     kvart,
                     podkvart
-                ))
+                )
+                
+                
+                """ entity_data.append((
+                    name,
+                    tip_stana,
+                    kat,
+                    time,
+                    price,
+                    kvadratura,
+                    link,
+                    kvart,
+                    podkvart
+                )) """
+                
+                
+                if suspicious_price:
+                    hand_review_data.append(listing_count)
+                else:
+                    entity_data.append(listing_count)
             
             print("listing count: ", listing_count)
             print("real listings: ", real_listing)
@@ -272,5 +292,5 @@ with sync_playwright() as p:
 data_name = ""
 
 create_db(entity_data, "zagreb")
-#create_db(hand_review_data, "hand_review")
+create_db(hand_review_data, "handreview")
 save_update("stanovviDB.db", "zagreb")

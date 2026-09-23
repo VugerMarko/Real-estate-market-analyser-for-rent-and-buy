@@ -112,6 +112,8 @@ def create_db(data_list, new_format):
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, data_list)
     
+    print(f"table {new_format} has been created and updated.")
+    
     connection.commit()
     connection.close()
     
@@ -123,16 +125,18 @@ def create_update_db(data_list, userInput):
         create table if not exists {userInput} (
             id integer primary key autoincrement,
             date_of_update date,
-            median int
+            median int,
+            number_of_listings int
         )
     """)
     
     cursor.executemany(f"""
         insert into {userInput} (
             date_of_update,
-            median
+            median,
+            number_of_listings
         )
-        values (?, ?)
+        values (?, ?, ?)
     """, data_list)
     
     connection.commit()
