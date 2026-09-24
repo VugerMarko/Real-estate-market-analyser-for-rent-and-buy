@@ -263,7 +263,7 @@ with sync_playwright() as p:
                 )
                 
                 
-                """ entity_data.append((
+                entity_data.append((
                     name,
                     tip_stana,
                     kat,
@@ -273,14 +273,8 @@ with sync_playwright() as p:
                     link,
                     kvart,
                     podkvart
-                )) """
+                ))
                 
-                
-                if suspicious_price:
-                    hand_review_data.append(listing_count)
-                else:
-                    entity_data.append(listing_count)
-            
             print("listing count: ", listing_count)
             print("real listings: ", real_listing)
             if real_listing == 0:
@@ -291,6 +285,13 @@ with sync_playwright() as p:
 
 data_name = ""
 
+""" print("hand_review_data type:", type(hand_review_data))
+print("hand_review_data length:", len(hand_review_data))
+"""
+""" for i, row in enumerate(hand_review_data):
+    print(i, type(row), row)
+"""
 create_db(entity_data, "zagreb")
-create_db(hand_review_data, "handreview")
 save_update("stanovviDB.db", "zagreb")
+#create_db(hand_review_data, "handreview")
+

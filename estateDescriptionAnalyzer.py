@@ -34,7 +34,9 @@ def save_update(dbname, tablename):
     
     median = df["najam"].mean()
     today = datetime.today()
-    num_of_listings = df["najam"].notna().sum()
+    
+    cursor.execute(f"select count(*) from {tablename}")
+    num_of_listings = cursor.fetchone()[0]
     
     
     update_list.append((
