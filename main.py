@@ -136,12 +136,20 @@ with sync_playwright() as p:
                             .replace(",", ".")
                             .strip()
                     )
-                    price = int(price)
+                    
+                    try:
+                        price = float(price)
+                    except ValueError:
+                        continue
+                    
+                    suspicious_price = price < 300 or price > 10000
+                    
+                    """ price = int(price)
                     
                     if price < 300 or price > 10000:
                         suspicious_price = True
                         #hand_review_data.append(price)
-                        continue
+                        continue """
                 else:
                     continue
                 
@@ -261,9 +269,7 @@ with sync_playwright() as p:
                     kvart,
                     podkvart
                 )
-                
-                
-                entity_data.append((
+                """ entity_data.append((
                     name,
                     tip_stana,
                     kat,
@@ -273,25 +279,79 @@ with sync_playwright() as p:
                     link,
                     kvart,
                     podkvart
-                ))
+                )) """
                 
+                if suspicious_price:
+                    hand_review_data.append(listing_count)
+                else:
+                    entity_data.append(listing_count)
+
             print("listing count: ", listing_count)
             print("real listings: ", real_listing)
             if real_listing == 0:
                 print("No listings found. Stopping.")
                 break
-            
     browser.close()
 
 data_name = ""
 
-""" print("hand_review_data type:", type(hand_review_data))
-print("hand_review_data length:", len(hand_review_data))
-"""
-""" for i, row in enumerate(hand_review_data):
+
+
+for i, row in enumerate(entity_data):
+    connection = sqlite3.connect("stanovviDB.db")
+    cursor = connection.cursor()
+    
+    try:
+        cursor.execute("""
+            INSERT INTO zagreb (
+                ime_oglasa,
+                tip_stana,
+                kat,
+                datum_objave,
+                najam,
+                kvadratura,
+                link_na_oglas,
+                kvart,
+                podkvart
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, row)
+
+    except Exception as e:
+        print("PROBLEM AT ROW:", i)
+        print("ROW:", row)
+        print("ERROR:", e)
+        break
+    
+    connection.commit()
+    connection.close()
+
+
+print("ENTITY:")
+for i, row in enumerate(entity_data):
     print(i, type(row), row)
-"""
-create_db(entity_data, "zagreb")
-save_update("stanovviDB.db", "zagreb")
-#create_db(hand_review_data, "handreview")
+
+print("HAND REVIEW:")
+for i, row in enumerate(hand_review_data):
+    print(i, type(row), row)
+
+
+print("entity data type: ", type(entity_data))
+print("lenghth of entity data:", len(entity_data))
+
+for row in entity_data[:3]:
+    print(type(row), len(row), row)
+
+print("hand_review_data type:", type(hand_review_data))
+print("hand_review_data length:", len(hand_review_data))
+
+for i, row in enumerate(hand_review_data):
+    print(i, type(row), row)
+
+if entity_data:
+    create_db(entity_data, "zagreb")
+    save_update("stanovviDB.db", "zagreb")
+
+if hand_review_data:
+    create_db(hand_review_data, "handreview")
 

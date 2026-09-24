@@ -255,7 +255,7 @@ plt.tight_layout()
 plt.subplots_adjust(right=0.75)
 #plt.show()
 
-save_update("stanovviDB.db", "zagreb")
+#save_update("stanovviDB.db", "zagreb")
 
 
 connection.close()
