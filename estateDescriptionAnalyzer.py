@@ -2,6 +2,7 @@ import sqlite3
 from bs4 import BeautifulSoup
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.widgets import Button
 import pandas as pd
 from datetime import datetime
 
@@ -252,10 +253,67 @@ ax4.bar_label(bars2, fmt="%.0f €", padding=3 )
 plt.title("Prosjecni najam i kvadrature po kvartu")
 plt.tight_layout()
 
-plt.subplots_adjust(right=0.75)
-#plt.show()
 
-save_update("stanovviDB.db", "zagreb")
+button_ax = plt.axes([0.85, 0.92, 0.1, 0.05])
+
+button = Button(
+    button_ax,
+    "Graph 3"
+)
+
+def show_graph_3(event):
+    ax1.clear()
+    ax2.clear()
+    ax4.clear()
+
+    ax1.bar(
+        average.index,
+        average["najam_median"]
+    )
+
+    ax1.set_title("Median grada zagreba kroz vrijeme")
+    ax1.tick_params(axis="x", rotation=90)
+
+    ax2.set_visible(False)
+
+    button.label.set_text("Back")
+
+    button.on_clicked(show_home)
+
+    fig.canvas.draw_idle()
+
+
+def show_home(event):
+    ax1.clear()
+
+    ax1.bar(
+        average.index,
+        average["najam"]
+    )
+
+    ax1.set_title("Prosječni najam po kvartu")
+    ax1.tick_params(axis="x", rotation=90)
+
+    ax2.set_visible(True)
+
+    ax2.bar(
+        average.index,
+        average["cijena_po_m2"]
+    )
+
+    ax2.set_title("Prosječna cijena po m²")
+    ax2.tick_params(axis="x", rotation=90)
+
+    button.label.set_text("Graph 3")
+
+    fig.canvas.draw_idle()
+
+button.on_clicked(show_graph_3)
+
+plt.subplots_adjust(right=0.75)
+plt.show()
+
+#save_update("stanovviDB.db", "zagreb")
 
 
 connection.close()
