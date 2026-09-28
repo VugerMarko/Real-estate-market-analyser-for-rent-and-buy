@@ -23,6 +23,10 @@ cursor.execute(f"""
 
 data_table = cursor.fetchall()
 
+
+columns = [description[0] for description in cursor.description]
+df = pd.DataFrame(data_table, columns=columns)
+
 def save_update(dbname, tablename):
     connection = sqlite3.connect(dbname)
     cursor = connection.cursor()
@@ -45,7 +49,7 @@ def save_update(dbname, tablename):
         num_of_listings
     ))
     
-    create_update_db(update_list, "updates")
+    create_update_db(update_list, "updates2")
     
     print("update list updated.")
     
@@ -63,10 +67,6 @@ def delete_table():
     connection.close()
     
     print(f"the table called {userInput} has been deleted.")
-
-columns = [description[0] for description in cursor.description]
-
-df = pd.DataFrame(data_table, columns=columns)
 
 pd.set_option("display.max_rows", None)
 
@@ -255,7 +255,7 @@ plt.tight_layout()
 plt.subplots_adjust(right=0.75)
 #plt.show()
 
-#save_update("stanovviDB.db", "zagreb")
+save_update("stanovviDB.db", "zagreb")
 
 
 connection.close()
