@@ -71,21 +71,21 @@ def delete_table():
 
 pd.set_option("display.max_rows", None)
 
-selected_kvart = ["Podsljeme", "Novi Zagreb - Zapad", "Novi Zagreb - Istok"]
+selected_kvart = ["Maksimir", "Sesvete", "Trešnjevka - Jug", "Donja Dubrava", "Trešnjevka - Sjever", "Peščenica - Žitnjak"]
 
 filtered = df[
     (df["kvadratura"] >= 35) &
-    (df["kvadratura"] <= 60) &
-    (df["najam"] <= 650) &
+    (df["kvadratura"] <= 55) &
+    (df["najam"] <= 550) &
     (df["kvart"].isin(selected_kvart))
 ]
-""" 
+
 print(
     filtered[
         ["najam", "kvadratura", "link_na_oglas", "kvart", "podkvart"]
-    ]
+    ].to_string()
 )
-"""
+
 #cijena po m2
 df["cijena_po_m2"] = df["najam"] / df["kvadratura"]
 #prosjek po odredjenoj kvadraturi
@@ -313,7 +313,7 @@ button.on_clicked(show_graph_3)
 plt.subplots_adjust(right=0.75)
 #plt.show()
 
-save_update("stanovviDB.db", "zagreb")
+#save_update("stanovviDB.db", "zagreb")
 
 
 connection.close()
