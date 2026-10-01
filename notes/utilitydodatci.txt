@@ -1,10 +1,4 @@
 sve kaj bih mogao dodati:
 
--naprivit da sve oglase koji su van omjera da ih se stavi u posebnu tablicu i da se mogu manualno pregledat
--moram napraviti za update.db da dodam ukupan broj stanova dostupnih i vidjet promijenu u medijanu u usporedbi sa brojem dostupnih stanova
-
-
-sve kaj moram popraviti:
-
--create_db(hand_review_data, "handreview") ne radi i baca sqlite3 error parameters are of unsupported type
--na update.db baca za medijan i broj stanova null/0
+- vizualiziraj update2 tablicu u graf
+- 
