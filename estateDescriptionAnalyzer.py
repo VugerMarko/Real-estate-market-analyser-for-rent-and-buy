@@ -311,9 +311,9 @@ def show_home(event):
 button.on_clicked(show_graph_3)
 
 plt.subplots_adjust(right=0.75)
-plt.show()
+#plt.show()
 
-#save_update("stanovviDB.db", "zagreb")
+save_update("stanovviDB.db", "zagreb")
 
 
 connection.close()
