@@ -71,19 +71,22 @@ def delete_table():
 
 pd.set_option("display.max_rows", None)
 
-selected_kvart = ["Maksimir", "Sesvete", "Trešnjevka - Jug", "Donja Dubrava", "Trešnjevka - Sjever", "Peščenica - Žitnjak"]
+selected_kvart = ["Maksimir", "Sesvete", "Donja Dubrava", "Novi Zagreb - Istok", "Gornja Dubrava"]
 
 filtered = df[
     (df["kvadratura"] >= 35) &
-    (df["kvadratura"] <= 55) &
+    (df["kvadratura"] <= 45) &
     (df["najam"] <= 550) &
     (df["kvart"].isin(selected_kvart))
 ]
 
+#column = ["najam", "kvadratura", "link_na_oglas", "kvart", "podkvart"]
+
+
 print(
     filtered[
-        ["najam", "kvadratura", "link_na_oglas", "kvart", "podkvart"]
-    ].to_string()
+        ["najam", "kvadratura", "kvart", "podkvart", "link_na_oglas"]
+    ].to_markdown(index=False)
 )
 
 #cijena po m2
