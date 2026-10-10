@@ -1,4 +1,5 @@
 sve kaj bih mogao dodati:
 
 - vizualiziraj update2 tablicu u graf
-- 
+- izracunati koliko bi prosjecno trebalo covjeku mjesecno za zivit u odredjenom stanu 
+  prema racunici o hrani po tjelesnoj masi, po mjesecnoj placi i po prosjecnoj cijeni 

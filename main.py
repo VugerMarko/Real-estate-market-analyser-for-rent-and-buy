@@ -283,3 +283,4 @@ data_name = ""
 
 create_db(entity_data, "zagreb")
 create_db(hand_review_data, "handreview")
+save_update("stanovviDB.db", "zagreb")
