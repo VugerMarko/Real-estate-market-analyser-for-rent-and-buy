@@ -79,7 +79,8 @@ with sync_playwright() as p:
             
             print("Actual URL: ", page.url)
             
-            entity_list = page.locator("li.EntityList-item:has(div.entity-description)")
+            entity_list = page.locator("li.listing:has(dl.highlights")
+            print(entity_list.count)
             
             listing_count = entity_list.count()
             
@@ -102,7 +103,7 @@ with sync_playwright() as p:
                 entity = entity_list.nth(i)
                 
                 #name finder
-                name_locator = entity.locator("h3.entity-title a.link")
+                name_locator = entity.locator("h3.title a.link span")
                 
                 if name_locator.count() > 0:
                     name = name_locator.inner_text()
@@ -110,7 +111,7 @@ with sync_playwright() as p:
                     name = "N/A"
                     
                 #link finder
-                link_locator = entity.locator("h3.entity-title a.link")
+                link_locator = entity.locator("h3.title a.link")
                 
                 if link_locator.count() == 0:
                     continue
@@ -125,7 +126,7 @@ with sync_playwright() as p:
                 if link in seen_links:
                     continue
                 #price finder
-                price_locator = entity.locator("strong.price.price--hrk")
+                price_locator = entity.locator("div.price p")
                 
                 if price_locator.count() > 0:
                     price = price_locator.inner_text()
@@ -155,10 +156,10 @@ with sync_playwright() as p:
                 
                 info = info_locator.inner_text()
                 
-                info_parts = [part.strip() for part in info.split("\n") if part.strip()]
+                info_parts = 0
 
                 #release date finder
-                time_locator = entity.locator("time.date.date--full")
+                time_locator = entity.locator("div.meta time.createdAt")
 
                 if time_locator.count() > 0:
                     time = time_locator.inner_text()

@@ -83,12 +83,12 @@ filtered = df[
 #column = ["najam", "kvadratura", "link_na_oglas", "kvart", "podkvart"]
 
 
-print(
+""" print(
     filtered[
         ["najam", "kvadratura", "kvart", "podkvart", "link_na_oglas"]
     ].to_markdown(index=False)
 )
-
+ """
 #cijena po m2
 df["cijena_po_m2"] = df["najam"] / df["kvadratura"]
 #prosjek po odredjenoj kvadraturi
